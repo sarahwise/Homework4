@@ -1,120 +1,172 @@
-//When Timer starts I am presented with a question
-//WHEN I answer a question THEN I am presented with another question
-//variables for score,timer, and enter name
-var score =0;
-var isWaiting = false;
-var isRunning = false;
-var seconds = 10;
-var countdownTimer;
-var finalCountdown = false;
-var person = prompt("Please enter your name");
+(function () {
+  function buildQuiz() {
+  const output = [];
 
-//Timer
-function GameTimer() {
-    var minutes = Math.round((seconds - 30) / 60);
-    var remainingSeconds = seconds % 60;
-    if (remainingSeconds < 10) {
-        remainingSeconds = "0" + remainingSeconds;
-    }
-    document.getElementById('waiting_time').innerHTML = minutes + ":" + remainingSeconds;
-    if (seconds == 0) {
-        isRunning = true;
-        seconds += 2;
-
-        if (finalCountdown) {
-            clearInterval(countdownTimer);
-        } else {
-            finalCountdown = true; 
+    myQuestions.forEach(
+      (currentQuestion, questionNumber) => {
+        const answers = [];
+        for (letter in currentQuestion.answers) {
+          answers.push(
+            `<label>
+              <input type="radio" name="question${questionNumber}" value="${letter}">
+              ${letter} :
+              ${currentQuestion.answers[letter]}
+            </label>`
+          );
         }
 
-    } else {
-        isWaiting = true;
-        seconds--;
-    }
-}
-countdownTimer = setInterval(GameTimer, 1000); 
 
-//Questions Array
-var questions =   [
+        output.push(
+          `<div class="slide">
+            <div class="question"> ${currentQuestion.question} </div>
+            <div class="answers"> ${answers.join("")} </div>
+          </div>`
+        );
+      }
+    );
+    quizContainer.innerHTML = output.join('');
+  }
+
+  function showResults() {
+    const answerContainers = quizContainer.querySelectorAll('.answers');
+    let numCorrect = 0;
+
+    myQuestions.forEach((currentQuestion, questionNumber) => {
+      const answerContainer = answerContainers[questionNumber];
+      const selector = `input[name=question${questionNumber}]:checked`;
+      const userAnswer = (answerContainer.querySelector(selector) || {}).value;
+
+//Change color of question depending if answer is correct or incorrect
+      if (userAnswer === currentQuestion.correctAnswer) {
+        numCorrect++;
+        answerContainers[questionNumber].style.color = 'lightgreen';
+      }
+      else {
+        answerContainers[questionNumber].style.color = 'red';
+      }
+
+    });
+      resultsContainer.innerHTML = `${numCorrect} out of ${myQuestions.length}`;
+  }
+
+  function showSlide(n) {
+    slides[currentSlide].classList.remove('active-slide');
+    slides[n].classList.add('active-slide');
+    currentSlide = n;
+    if (currentSlide === 0) {
+      previousButton.style.display = 'none';
+    }
+    else {
+      previousButton.style.display = 'inline-block';
+    }
+    if (currentSlide === slides.length - 1) {
+      nextButton.style.display = 'none';
+      submitButton.style.display = 'inline-block';
+    }
+    else {
+      nextButton.style.display = 'inline-block';
+      submitButton.style.display = 'none';
+    }
+  }
+
+  function showNextSlide() {
+    showSlide(currentSlide + 1);
+  }
+
+  function showPreviousSlide() {
+    showSlide(currentSlide - 1);
+  }
+
+  // Variables and quiz questions
+  const quizContainer = document.getElementById('quiz');
+  const resultsContainer = document.getElementById('results');
+  const submitButton = document.getElementById('submit');
+  const myQuestions = [
     {
-      question: "Inside which HTML element do we put the JavaScript?",
-      choices: [<script>,<scripting>,<js>"],
-      answer: 1
+      question: "Who invented JavaScript?",
+      answers: {
+        a: "Douglas Crockford",
+        b: "Sheryl Sandberg",
+        c: "Brendan Eich"
+      },
+      correctAnswer: "c"
+    },
+    {
+      question:"What year was JavaScript invented?",
+      answers: {
+        a: "1989",
+        b: "1998",
+        c: "1993"
+      },
+      correctAnswer: "c"
+    },
+    {
+      question: "Is there a difference between Java and JavaScript?",
+      answers: {
+        a: "Yes",
+        b: "No",
+        c: "I'm not sure"
+      },
+      correctAnswer: "a"
+    },
+    {
+      question: "What is null condsidered?",
+      answers: {
+        a: "Function",
+        b: "Array",
+        c: "Value",
+        d: "Object"
+
+      },
+      correctAnswer: "d"
+    },
+    {
+      question: "Before being named JavaScript the language was actually named what?",
+      answers: {
+        a: "Mocha",
+        b: "JS",
+        c: "Latte"
+
+      },
+      correctAnswer: "c"
     },
     
-    {
-      question: "Who invented Java Script?",
-      choices: [James Gosling, Mark Zuckerburg,Brendan Eich"],
-      answer: 3
+  ];
+
+
+  buildQuiz();
+
+
+  const previousButton = document.getElementById("previous");
+  const nextButton = document.getElementById("next");
+  const slides = document.querySelectorAll(".slide");
+  let currentSlide = 0;
+
+
+  showSlide(currentSlide);
+
+  submitButton.addEventListener('click', showResults);
+  previousButton.addEventListener("click", showPreviousSlide);
+  nextButton.addEventListener("click", showNextSlide);
+
+
+  //timer 
+  var timeLeft = 30;
+  var elem = document.getElementById('some_div');
+  var timerId = setInterval(countdown, 1000);
+
+  function countdown() {
+    if (timeLeft == -1) {
+      clearTimeout(timerId);
+      doSomething();
+    } else {
+      elem.innerHTML = timeLeft + ' seconds remaining';
+      timeLeft--;
     }
-
-    {
-        question: "Where is the correct place to insert a JavaScript?",
-        choices: ["<head>,<body>,Both A and B:"],
-        answer: 3
-      }
-
-      {
-        question: "How do you create a function in JavaScript?",
-        choices: ["function:myFunction(),function myFunction(),function=myFunction"],
-        answer: 2
-      }
-      
-      {
-        question: "How does a for loop start?",
-        choices: ["for(i=0; i <=5; i++),for (i <=5:' i++,for (i=0;<=5)"],
-        answer: 1
-      }
-    ];
-
-
-//Loop to take you through questions
-
-for ( var i = 0; i < questions.length; i++ ) {
-    var question = questions[i].question;
-    document.write ( question );
-    var options = questions[i].choices;
-    for ( var opt in options ) {
-       for ( var radios in userChoices ) {
-         userChoices[radios].value = options[opt];
-         
-       }
-    }
-    
-  } 
-
-
-//WHEN I answer a question incorrectly THEN time is subtracted from the clock
-//WHEN all questions are answered or the timer reaches 0
-
-
-//Score Alert
-alert("you got" + score + "/" + questions.lenght);
-
-
-//WHEN the game is over THEN I can save my initials and score
-//Enter High Score
-if (person != null) {
-    document.getElementById("demo").innerHTML =
-    "Hello " + person + "! What was your score?";
   }
 
-  if (score != null) {
-    document.getElementById("demo").innerHTML =
-    "Wow " + person + "! Great Job!";
+  function doSomething() {
+    alert("Game Over");
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+})();

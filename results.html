@@ -1,48 +1,108 @@
 <!DOCTYPE html>
 <html>
 <head>
-<!--Linking CSS-->
-<link rel="stylesheet" type="text/css" href="mystyle.css">
+  <!--Linking CSS-->
+  <link rel="stylesheet" type="text/css" href="style.css">
 
-<!--Bootstrap CSS-->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <!--Bootstrap CSS-->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-<title>Javascript Quiz</title>
+  <title>Javascript Quiz</title>
 </head>
+
 <body>
-<!--Navbar-->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+  <!--Navbar-->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
+      aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
       <a class="navbar-brand" href="#">Javascript Quiz</a>
       <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-        <li class="nav-item active">
+        <li class="nav-item">
           <a class="nav-link" href="index.html">Home<span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="quiz.html">Quiz</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Results</a>
+          <a class="nav-link active" href="results.html" tabindex="-1" aria-disabled="true">Scoreboard</a>
         </li>
       </ul>
-      <form class="form-inline my-2 my-lg-0">
+      <!--<form class="form-inline my-2 my-lg-0">
         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-      </form>
+      </form>--> 
     </div>
   </nav>
 
-<h1></h1>
-<p></p>
+  <!--Scoreboard-->
 
-<!--Linking Javascript-->
-<script src="script.js"></script>
+  <script>
+    var table = document.getElementById('table');
+    var row = document.createElement('fname');
+    var td1 = document.createElement('lname');
+    var td2 = document.createElement('score');
+    td1.innerHTML = document.getElementById('fname').value;
+    td2.innerHTML = document.getElementById('lname').value;
+    td3.innerHTML = document.getElementById('score').value;
+    row.appendChild(td1);
+    row.appendChild(td2);
+    row.appendChild(td3);
+    table.children[0].appendChild(row);
 
-<!--Bootstrap javascript link-->
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    (function setup() {
+    "use strict";
 
+    var fNameElem = document.getElementById("fName");
+    var lNameElem = document.getElementById("lName");
+    var genderElem = document.getElementById("score");
+    var tableElem = document.getElementById("table");
+    document.getElementById("display").addEventListener("click", function () {
+        var newRow = tableElem.insertRow(-1);
+        var newCell = newRow.insertCell(0);
+        var newText = document.createTextNode(lNameElem.value + ", " + fNameElem.value);
+        newCell.appendChild(newText);
+        newCell = newRow.insertCell(1);
+        newText  = document.createTextNode(scoreElem.value);
+        newCell.appendChild(newText);
+        fNameElem.value = "";
+        lNameElem.value = "";
+        scoreElem.value = "";
+        tableElem.value = "";
+    });
+})();​
+</script>
+
+    First Name:<br>
+    <input type="text" id="fName" /><br>
+    Last Name: <br>
+    <input type="text" id="lName" /><br>
+    Score: <br>
+    <input type="text" id="score" /><br>
+    <input type="button" id="submit" value="submit" /><br>
+    <table id="table">
+    <tr>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Score</th>
+    </tr>
+    </table>
+
+  
+  <!--End Scoreboard-->
+
+  <!--Bootstrap javascript link-->
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"></script>
+
+  <!--Linking Javascript-->
+  <script src="script.js"></script>
+ 
+
+ 
 </body>
 </html>
